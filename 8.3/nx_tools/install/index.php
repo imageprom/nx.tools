@@ -84,17 +84,17 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnBeforeProlog',
-            'nx_tools',
+            $this->MODULE_ID,
             '',
             '',
             100,
-            '/modules/nx_tools/before.php'
+            '/modules/'.$this->MODULE_ID.'/before.php'
         );
 
         $eventManager->registerEventHandler(
             'iblock',
             'OnIBlockPropertyBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeDirectory',
             'GetUserTypeDescription'
         );
@@ -102,7 +102,7 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeHlblock',
             'getDescription'
         );
@@ -110,7 +110,7 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+             $this->MODULE_ID,
             'NXTools\CNXUserTypeUser',
             'getDescription'
         );
@@ -118,7 +118,7 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeOrder',
             'getDescription'
         );
@@ -138,16 +138,16 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnBeforeProlog',
-            'nx_tools',
+            $this->MODULE_ID,
             '',
             '',
-            '/modules/nx_tools/before.php'
+            '/modules/'.$this->MODULE_ID.'/before.php'
         );
 
         $eventManager->unRegisterEventHandler(
             'iblock',
             'OnIBlockPropertyBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeDirectory',
             'GetUserTypeDescription'
         );
@@ -155,7 +155,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeHlblock',
             'getDescription'
         );
@@ -163,7 +163,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeUser',
             'getDescription'
         );
@@ -171,7 +171,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeOrder',
             'getDescription'
         );
@@ -179,7 +179,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeOrder',
             'GetUserTypeDescription'
         );
