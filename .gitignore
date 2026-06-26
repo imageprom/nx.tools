@@ -47,3 +47,4 @@ tmp.log
 .php_cs.cache
 *style.min.css
 *script.min.js
+/8.3/nx_market/

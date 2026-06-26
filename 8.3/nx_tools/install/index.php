@@ -1,79 +1,68 @@
-<?php
+<?
 /** @var CMain $APPLICATION */
 /** @var CDatabase $DB */
 
-
-IncludeModuleLangFile(__FILE__);
 use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
-
 
 if (class_exists('nx_tools'))
     return;
 
 class nx_tools extends CModule
 {
-    var $MODULE_ID = 'nx_tools';
-    var $MODULE_VERSION;
-    var $MODULE_VERSION_DATE;
-    var $MODULE_NAME;
-    var $MODULE_DESCRIPTION;
-    var $MODULE_CSS;
-    var $MODULE_GROUP_RIGHTS = 'Y';
-    var $errors;
+    public $MODULE_ID = 'nx_tools';
+    public $MODULE_GROUP_RIGHTS = 'Y';
+    private ?array $errors = [];
 
-    const PATH = '/modules/nx_tools';
+    const string PATH = '/modules/nx_tools';
 
-    var string $path = '/local'.self::PATH;
+    protected static string $path = '/local'.self::PATH;
+    protected string $instPath;
 
     function __construct()
     {
-        //$PathInstall = str_replace("\\", "/", __FILE__);
-        //$PathInstall = substr($PathInstall, 0, strlen($PathInstall)-strlen("/index.php"));
-        //IncludeModuleLangFile($PathInstall."/install.php");
-
         $arModuleVersion = [];
         include(__DIR__.'/version.php');
         $this->MODULE_VERSION = $arModuleVersion['VERSION'];
         $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
         $this->MODULE_NAME = Loc::getMessage('NX_TOOLS_MODULE_NAME');
         $this->MODULE_DESCRIPTION = Loc::getMessage('NX_TOOLS_MODULE_DESCRIPTION');
+        $this->instPath = $_SERVER['DOCUMENT_ROOT'].self::$path.'/install';
     }
 
     /**
      * @param array $arParams
      * @return bool
      */
-    function InstallDB($arParams = [])
+    function InstallDB(array $arParams = []) : bool
     {
         global $DB, $APPLICATION;
-        $this->errors = false;
+        $this->errors = null;
 
-        \Bitrix\Main\ModuleManager::registerModule('nx_tools');
-        \Bitrix\Main\Loader::IncludeModule('nx_tools');
+        \Bitrix\Main\ModuleManager::registerModule($this->MODULE_ID);
+        \Bitrix\Main\Loader::IncludeModule($this->MODULE_ID);
 
         return true;
-
     }
 
     /**
      * @param array $arParams
      * @return bool
      */
-    function UnInstallDB($arParams = []) : bool
+    function UnInstallDB(array $arParams = []) : bool
     {
-        global $DB, $APPLICATION;
-        $this->errors = false;
+        global $DB;
+        $this->errors = null;
 
         //delete agents
-        CAgent::RemoveModuleAgents('nx_tools');
+        CAgent::RemoveModuleAgents($this->MODULE_ID);
 
-        $db_res = $DB->Query("SELECT ID FROM b_file WHERE MODULE_ID = 'nx_tools'");
+        $db_res = $DB->Query("SELECT ID FROM b_file WHERE MODULE_ID = '{$this->MODULE_ID}'");
         while($arRes = $db_res->Fetch()) {
             CFile::Delete($arRes['ID']);
         }
 
-        UnRegisterModule('nx_tools');
+        UnRegisterModule($this->MODULE_ID);
 
         return true;
     }
@@ -95,17 +84,17 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnBeforeProlog',
-            'nx_tools',
+            $this->MODULE_ID,
             '',
             '',
             100,
-            '/modules/nx_tools/before.php'
+            '/modules/'.$this->MODULE_ID.'/before.php'
         );
 
         $eventManager->registerEventHandler(
             'iblock',
             'OnIBlockPropertyBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeDirectory',
             'GetUserTypeDescription'
         );
@@ -113,7 +102,7 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeHlblock',
             'getDescription'
         );
@@ -121,7 +110,7 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+             $this->MODULE_ID,
             'NXTools\CNXUserTypeUser',
             'getDescription'
         );
@@ -129,7 +118,7 @@ class nx_tools extends CModule
         $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeOrder',
             'getDescription'
         );
@@ -142,23 +131,23 @@ class nx_tools extends CModule
      */
     function UnInstallEvents(): bool
     {
-        UnRegisterModuleDependences('main', 'OnUserTypeBuildList', 'nx_tools', 'NXTools\CNXUserTypeOrder', 'GetUserTypeDescription');
+       //. UnRegisterModuleDependences('main', 'OnUserTypeBuildList', 'nx_tools', 'NXTools\CNXUserTypeOrder', 'GetUserTypeDescription');
 
         $eventManager = \Bitrix\Main\EventManager::getInstance();
 
         $eventManager->unRegisterEventHandler(
             'main',
             'OnBeforeProlog',
-            'nx_tools',
+            $this->MODULE_ID,
             '',
             '',
-            '/modules/nx_tools/before.php'
+            '/modules/'.$this->MODULE_ID.'/before.php'
         );
 
         $eventManager->unRegisterEventHandler(
             'iblock',
             'OnIBlockPropertyBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeDirectory',
             'GetUserTypeDescription'
         );
@@ -166,7 +155,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeHlblock',
             'getDescription'
         );
@@ -174,7 +163,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeUser',
             'getDescription'
         );
@@ -182,7 +171,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeOrder',
             'getDescription'
         );
@@ -190,7 +179,7 @@ class nx_tools extends CModule
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
-            'nx_tools',
+            $this->MODULE_ID,
             'NXTools\CNXUserTypeOrder',
             'GetUserTypeDescription'
         );
@@ -205,10 +194,12 @@ class nx_tools extends CModule
      */
     function InstallFiles(array $arParams = []) : bool
     {
-        CopyDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
-        CopyDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/images', $_SERVER['DOCUMENT_ROOT'].'/bitrix/images/nx_tools', true, true);
-        CopyDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
-        CopyDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
+
+        CopyDirFiles($this->instPath.'/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
+        CopyDirFiles($this->instPath.'/images', $_SERVER['DOCUMENT_ROOT'].'/bitrix/images/'.$this->MODULE_ID, true, true);
+        CopyDirFiles($this->instPath.'/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
+        CopyDirFiles($this->instPath.'/install/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
+
         return true;
     }
 
@@ -217,10 +208,12 @@ class nx_tools extends CModule
      */
     function UnInstallFiles() : bool
     {
-        DeleteDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
+        $instPath = $_SERVER['DOCUMENT_ROOT'].$this->path.'/install';
+
+        DeleteDirFiles($this->instPath.'/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
         DeleteDirFilesEx('/bitrix/images/nx_tools/'); //images
-        DeleteDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
-        DeleteDirFiles($_SERVER['DOCUMENT_ROOT'].$this->path.'/install/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
+        DeleteDirFiles($this->instPath.'/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
+        DeleteDirFiles($this->instPath.'/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
         return true;
     }
 
@@ -229,23 +222,27 @@ class nx_tools extends CModule
      */
     function DoInstall(): void
     {
-        global $USER, $APPLICATION, $step;
+        global $USER, $APPLICATION, $step, $errors;
+
         if ($USER->IsAdmin())
         {
-            $step = intval($step);
+            $step = (int) $step;
+
             if ($step < 2)
             {
-                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $_SERVER['DOCUMENT_ROOT'].$this->path.'/install/step.php');
+
+                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $this->instPath.'/step.php');
             }
             elseif ($step == 2)
             {
                 if ($this->InstallDB())
                 {
-                    $this->InstallFiles();
+                    //$this->InstallFiles();
                     $this->InstallEvents();
                 }
-                $GLOBALS['errors'] = $this->errors;
-                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $_SERVER['DOCUMENT_ROOT'].$this->path.'/install/step.php');
+
+                $errors = $this->errors;
+                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $this->instPath.'/step.php');
             }
         }
     }
@@ -255,23 +252,26 @@ class nx_tools extends CModule
      */
     public function DoUninstall() : void
     {
-        global $USER, $APPLICATION, $step;
+        global $USER, $APPLICATION, $step, $errors;
+
         if ($USER->IsAdmin())
         {
-            $step = intval($step);
+            $step = (int) $step;
+
             if ($step < 2)
             {
-                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_UNINSTALL_TITLE'), $_SERVER['DOCUMENT_ROOT'].$this->path.'/install/unstep.php');
+                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $this->instPath.'/unstep.php');
             }
             elseif ($step == 2)
             {
                 $this->UnInstallDB([
                     'save_tables' => $_REQUEST['save_tables'],
                 ]);
-                $this->UnInstallFiles();
+//                $this->UnInstallFiles();
                 $this->UnInstallEvents();
-                $GLOBALS['errors'] = $this->errors;
-                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_UNINSTALL_TITLE'), $_SERVER['DOCUMENT_ROOT'].$this->path.'/install/unstep.php');
+
+                $errors = $this->errors;
+                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $this->instPath.'/unstep.php');
             }
         }
     }
