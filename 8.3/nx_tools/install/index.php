@@ -198,7 +198,7 @@ class nx_tools extends CModule
         CopyDirFiles($this->instPath.'/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
         CopyDirFiles($this->instPath.'/images', $_SERVER['DOCUMENT_ROOT'].'/bitrix/images/'.$this->MODULE_ID, true, true);
         CopyDirFiles($this->instPath.'/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
-        CopyDirFiles($this->instPath.'/install/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
+        CopyDirFiles($this->instPath.'/install/js', $_SERVER['DOCUMENT_ROOT'].'/local/js/'.$this->MODULE_ID, true, true);
 
         return true;
     }
@@ -211,9 +211,9 @@ class nx_tools extends CModule
         $instPath = $_SERVER['DOCUMENT_ROOT'].$this->path.'/install';
 
         DeleteDirFiles($this->instPath.'/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
-        DeleteDirFilesEx('/bitrix/images/nx_tools/'); //images
+        DeleteDirFilesEx('/bitrix/images/'.$this->MODULE_ID); //images
         DeleteDirFiles($this->instPath.'/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
-        DeleteDirFiles($this->instPath.'/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
+        DeleteDirFiles($this->instPath.'/js', $_SERVER['DOCUMENT_ROOT'].'/local/js/'.$this->MODULE_ID, true, true);
         return true;
     }
 
@@ -237,7 +237,7 @@ class nx_tools extends CModule
             {
                 if ($this->InstallDB())
                 {
-                    //$this->InstallFiles();
+                    $this->InstallFiles();
                     $this->InstallEvents();
                 }
 
@@ -267,7 +267,7 @@ class nx_tools extends CModule
                 $this->UnInstallDB([
                     'save_tables' => $_REQUEST['save_tables'],
                 ]);
-//                $this->UnInstallFiles();
+                $this->UnInstallFiles();
                 $this->UnInstallEvents();
 
                 $errors = $this->errors;

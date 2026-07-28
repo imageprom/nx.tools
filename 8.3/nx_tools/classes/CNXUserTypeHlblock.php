@@ -20,6 +20,7 @@ IncludeModuleLangFile(__FILE__);
 
 use Bitrix\Highloadblock\HighloadBlockTable as HLBT;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
+use Bitrix\Main\UserField\Types\StringType;
 
 class CNXUserTypeHlblock extends \CUserTypeHlblock
 {

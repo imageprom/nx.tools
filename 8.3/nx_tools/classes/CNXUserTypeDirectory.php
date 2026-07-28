@@ -14,6 +14,7 @@ use Bitrix\Main\Localization\Loc,
     Bitrix\Highloadblock as HL;
 use CIBlockPropertyDirectory;
 use CJSCore;
+use Bitrix\Main\UserField\Types\StringType;
 
 \Bitrix\Main\Loader::includeModule('highloadblock');
 
