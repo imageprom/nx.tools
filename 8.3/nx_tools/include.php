@@ -14,6 +14,7 @@ CModule::AddAutoloadClasses('nx_tools', [
 	'NXTools\CNXPropertyHlblock' => 'classes/CNXPropertyHlblock.php',
 	'NXTools\CNXUserTypeHlblock' => 'classes/CNXUserTypeHlblock.php',
 	'NXTools\CNXUserTypeUser' => 'classes/CNXUserTypeUser.php',
+    'NXTools\CNXUserTypeCheckBox' => 'classes/CNXUserTypeCheckBox.php',
 ]);
 
 IncludeModuleLangFile(__FILE__);

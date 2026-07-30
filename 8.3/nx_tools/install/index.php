@@ -100,6 +100,14 @@ class nx_tools extends CModule
         );
 
         $eventManager->registerEventHandler(
+            'iblock',
+            'OnIBlockPropertyBuildList',
+            $this->MODULE_ID,
+            'NXTools\CNXUserTypeCheckBox',
+            'GetUserTypeDescription'
+        );
+
+        $eventManager->registerEventHandler(
             'main',
             'OnUserTypeBuildList',
             $this->MODULE_ID,
@@ -149,6 +157,14 @@ class nx_tools extends CModule
             'OnIBlockPropertyBuildList',
             $this->MODULE_ID,
             'NXTools\CNXUserTypeDirectory',
+            'GetUserTypeDescription'
+        );
+
+        $eventManager->unRegisterEventHandler(
+            'iblock',
+            'OnIBlockPropertyBuildList',
+            $this->MODULE_ID,
+            'NXTools\CNXUserTypeCheckBox',
             'GetUserTypeDescription'
         );
 
