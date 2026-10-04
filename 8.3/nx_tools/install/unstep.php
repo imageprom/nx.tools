@@ -42,12 +42,8 @@ if ($step == 2):?>
 
     <p><?= Loc::getMessage ('MOD_UNINST_SAVE') ?></p>
     <p>
-        <input type="checkbox" name="savedata" id="savedata" value="Y" checked="checked"/>
-        <label for="savedata"><?= Loc::getMessage('MOD_UNINST_SAVE_TABLES') ?></label>
-    </p>
-    <p>
-        <input type="checkbox" name="save_templates" id="save_templates" value="Y" checked="checked"/>
-        <label for="save_templates"><?= Loc::getMessage('MOD_UNINST_SAVE_EVENTS') ?></label>
+        <input type="checkbox" name="save_tables" id="save_tables" value="Y" checked="checked"/>
+        <label for="save_tables"><?= Loc::getMessage('MOD_UNINST_SAVE_TABLES') ?></label>
     </p>
     <input type="submit" name="inst" value="<?= Loc::getMessage('MOD_UNINST_DEL') ?>"/>
 </form>

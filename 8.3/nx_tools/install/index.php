@@ -62,7 +62,7 @@ class nx_tools extends CModule
             CFile::Delete($arRes['ID']);
         }
 
-        UnRegisterModule($this->MODULE_ID);
+        \Bitrix\Main\ModuleManager::unRegisterModule($this->MODULE_ID);
 
         return true;
     }
@@ -77,7 +77,6 @@ class nx_tools extends CModule
         // RegisterModuleDependences('iblock', 'OnIBlockPropertyBuildList', 'nx_tools', 'NXTools\CNXUserTypeDirectory', 'GetUserTypeDescription');
         // RegisterModuleDependences('main', 'OnUserTypeBuildList', 'nx_tools', 'NXTools\CNXUserTypeHlblock', 'getDescription');
         // RegisterModuleDependences('main', 'OnUserTypeBuildList', 'nx_tools', 'NXTools\CNXUserTypeUser', 'getDescription');
-        // RegisterModuleDependences('main', 'OnUserTypeBuildList', 'nx_tools', 'NXTools\CNXUserTypeOrder', 'getDescription');
 
         $eventManager = \Bitrix\Main\EventManager::getInstance();
 
@@ -115,14 +114,6 @@ class nx_tools extends CModule
             'getDescription'
         );
 
-        $eventManager->registerEventHandler(
-            'main',
-            'OnUserTypeBuildList',
-            $this->MODULE_ID,
-            'NXTools\CNXUserTypeOrder',
-            'getDescription'
-        );
-
         return true;
     }
 
@@ -131,8 +122,6 @@ class nx_tools extends CModule
      */
     function UnInstallEvents(): bool
     {
-       //. UnRegisterModuleDependences('main', 'OnUserTypeBuildList', 'nx_tools', 'NXTools\CNXUserTypeOrder', 'GetUserTypeDescription');
-
         $eventManager = \Bitrix\Main\EventManager::getInstance();
 
         $eventManager->unRegisterEventHandler(
@@ -168,6 +157,8 @@ class nx_tools extends CModule
             'getDescription'
         );
 
+        // NXTools\CNXUserTypeOrder belongs to another module: registration removed,
+        // unregistration kept to clean up handlers left by earlier installations
         $eventManager->unRegisterEventHandler(
             'main',
             'OnUserTypeBuildList',
@@ -212,8 +203,8 @@ class nx_tools extends CModule
 
         DeleteDirFiles($this->instPath.'/admin', $_SERVER['DOCUMENT_ROOT'].'/bitrix/admin');
         DeleteDirFilesEx('/bitrix/images/nx_tools/'); //images
-        DeleteDirFiles($this->instPath.'/components', $_SERVER['DOCUMENT_ROOT'].'/local/components', true, true);
-        DeleteDirFiles($this->instPath.'/js', $_SERVER['DOCUMENT_ROOT'].'/local/js', true, true);
+        DeleteDirFilesEx('/local/components/ip/nx.hlblock.element.selector');
+        DeleteDirFiles($this->instPath.'/js', $_SERVER['DOCUMENT_ROOT'].'/local/js');
         return true;
     }
 
@@ -260,18 +251,20 @@ class nx_tools extends CModule
 
             if ($step < 2)
             {
-                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $this->instPath.'/unstep.php');
+                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_UNINSTALL_TITLE'), $this->instPath.'/unstep.php');
             }
             elseif ($step == 2)
             {
-                $this->UnInstallDB([
-                    'save_tables' => $_REQUEST['save_tables'],
-                ]);
-//                $this->UnInstallFiles();
+                $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+
                 $this->UnInstallEvents();
+//                $this->UnInstallFiles();
+                $this->UnInstallDB([
+                    'save_tables' => $request->get('save_tables'),
+                ]);
 
                 $errors = $this->errors;
-                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_INSTALL_TITLE'), $this->instPath.'/unstep.php');
+                $APPLICATION->IncludeAdminFile(Loc::getMessage('NX_TOOLS_UNINSTALL_TITLE'), $this->instPath.'/unstep.php');
             }
         }
     }
