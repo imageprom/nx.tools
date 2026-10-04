@@ -30,7 +30,7 @@ if ($ENTITY_ID > 0)
 	{
 		//localization
 		$lng = HL\HighloadBlockLangTable::getList(array(
-					'filter' => array('ID' => $hlblock['ID'], '=LID' => LANG))
+					'filter' => array('ID' => $hlblock['ID'], '=LID' => LANGUAGE_ID))
 				)->fetch();
 		if ($lng)
 		{
@@ -263,7 +263,7 @@ while($arRes = $rsData->NavNext(true, "f_"))
     $row->AddActions(array(
         array(
             "DEFAULT" => "Y",
-            "TEXT" => 'Выбрать',
+            "TEXT" => \Bitrix\Main\Localization\Loc::getMessage('NX_TOOLS_ADMIN_SELECT'),
             "ACTION"=>"javascript:SelEl('".$SelElVals."', '".htmlspecialcharsbx($jsPath.htmlspecialcharsbx(CUtil::JSEscape($arRes["UF_NAME"]), ENT_QUOTES)).$nameSeparator."', '".$arRes['ID']."')",
         ),
     ));

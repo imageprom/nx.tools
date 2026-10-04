@@ -13,6 +13,7 @@ namespace NXTools;
 
 IncludeModuleLangFile(__FILE__);
 
+use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UserField\Types\EnumType,
     Bitrix\Main\UserField\Types\StringType,
@@ -33,7 +34,7 @@ class CNXUserTypeUser extends EnumType
         return [
             'USER_TYPE_ID' => 'nx_user',
             'CLASS_NAME' => 'NXTools\CNXUserTypeUser',
-            'DESCRIPTION' => 'NX - привязка к Пользователям',
+            'DESCRIPTION' => Loc::getMessage('NX_TOOLS_UT_USER_DESCRIPTION'),
             'BASE_TYPE' => self::USER_TYPE_ID,
         ];
     }
@@ -109,7 +110,7 @@ class CNXUserTypeUser extends EnumType
 
         if ($arUserField['MULTIPLE'] == 'Y') {
             $result .= '<tr>' .
-                '<td style="padding-top: 6px;"><input type="button" value="Добавить" onclick="addNewRow(\'table_' . $name . '\', \'' . $name . '\')"></td>' .
+                '<td style="padding-top: 6px;"><input type="button" value="' . Loc::getMessage('NX_TOOLS_UT_ADD_BUTTON') . '" onclick="addNewRow(\'table_' . $name . '\', \'' . $name . '\')"></td>' .
                 '</tr>';
         }
 
@@ -124,10 +125,11 @@ class CNXUserTypeUser extends EnumType
                 var oRow=oTbl.insertRow(oTbl.rows.length-1);
                 var oCell=oRow.insertCell(-1);";
 
+        $langId = LANGUAGE_ID;
         $result .= <<<EOT
 oCell.innerHTML='<input name="$arUserField[FIELD_NAME]['+indexCount_$tag_name_x+']" value="" id="$arUserField[FIELD_NAME]['+indexCount_$tag_name_x+']" size="5" type="text">'+
 '<input type="button" value="..." '+
-'onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_user_search.php?FN=$form_name&lang=ru&FC=$arUserField[EDIT_FORM_LABEL]['+indexCount_$tag_name_x+']\', '+
+'onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_user_search.php?FN=$form_name&lang=$langId&FC=$arUserField[EDIT_FORM_LABEL]['+indexCount_$tag_name_x+']\', '+
 ' 900, 700);">'+'&nbsp;<span id="div_$arUserField[EDIT_FORM_LABEL]['+indexCount_$tag_name_x+']" ></span>';
 EOT;
 
@@ -162,7 +164,7 @@ EOT;
 
         $result .= "<IFRAME style=\"width:0px; height:0px; border: 0px\" src=\"javascript:void(0)\" name=\"hiddenframe" . $inputName . "\" id=\"hiddenframe" . $inputName . "\"></IFRAME>";
 
-        $result .= '<input type="button" value="..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_user_search.php?lang=ru&FN=' . $form_name . '&lang=ru&FC=' . $inputName . '\', 900, 700);">' .
+        $result .= '<input type="button" value="..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_user_search.php?lang=' . LANGUAGE_ID . '&FN=' . $form_name . '&lang=' . LANGUAGE_ID . '&FC=' . $inputName . '\', 900, 700);">' .
             '&nbsp;<span id="div_' . $inputName . '" >' . $inputValsName . $inputValsStr . '</span>';
 
         return $result;
@@ -221,7 +223,7 @@ EOT;
         }
         $arUser = $cache[$value];
         if ($arUser) {
-            return "[<a title='" . GetMessage('MAIN_EDIT_USER_PROFILE') . "' href='user_edit.php?ID=" . $arUser["ID"] . "&lang=" . LANG . "'>" . $arUser["ID"] . "</a>] (" . htmlspecialcharsbx($arUser["LOGIN"]) . ") " . htmlspecialcharsbx($arUser["NAME"]) . " " . htmlspecialcharsbx($arUser["LAST_NAME"]);
+            return "[<a title='" . GetMessage('MAIN_EDIT_USER_PROFILE') . "' href='user_edit.php?ID=" . $arUser["ID"] . "&lang=" . LANGUAGE_ID . "'>" . $arUser["ID"] . "</a>] (" . htmlspecialcharsbx($arUser["LOGIN"]) . ") " . htmlspecialcharsbx($arUser["NAME"]) . " " . htmlspecialcharsbx($arUser["LAST_NAME"]);
         } else
             return "&nbsp;";
     }

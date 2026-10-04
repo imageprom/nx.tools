@@ -19,6 +19,7 @@ namespace NXTools;
 IncludeModuleLangFile(__FILE__);
 
 use Bitrix\Highloadblock\HighloadBlockTable as HLBT;
+use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 
 class CNXUserTypeHlblock extends \CUserTypeHlblock
@@ -36,7 +37,7 @@ class CNXUserTypeHlblock extends \CUserTypeHlblock
         return [
             'USER_TYPE_ID' => 'nx_hlblock',
             'CLASS_NAME' => 'NXTools\CNXUserTypeHlblock',
-            'DESCRIPTION' => 'NX - привязка к элементам highloadblock',
+            'DESCRIPTION' => Loc::getMessage('NX_TOOLS_UT_HLBLOCK_DESCRIPTION'),
             'BASE_TYPE' => self::USER_TYPE_ID,
         ];
     }
@@ -90,7 +91,7 @@ class CNXUserTypeHlblock extends \CUserTypeHlblock
 
         $result .= "<IFRAME style=\"width:0px; height:0px; border: 0px\" src=\"javascript:void(0)\" name=\"hiddenframe" . $inputName . "\" id=\"hiddenframe" . $inputName . "\"></IFRAME>";
 
-        $result .= '<input type="button" value="..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_highloadblock_rows_list_search.php?ENTITY_ID=' . $arUserField["SETTINGS"]['HLBLOCK_ID'] . '&lang=ru&n=' . $inputName . '&type=hib\', 900, 700);">' .
+        $result .= '<input type="button" value="..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_highloadblock_rows_list_search.php?ENTITY_ID=' . $arUserField["SETTINGS"]['HLBLOCK_ID'] . '&lang=' . LANGUAGE_ID . '&n=' . $inputName . '&type=hib\', 900, 700);">' .
             '&nbsp;<span class="name_element" id="div_' . $inputName . '" >' . $inputValsName . '</span>';
 
 
@@ -150,7 +151,7 @@ class CNXUserTypeHlblock extends \CUserTypeHlblock
 
         if ($arUserField['MULTIPLE'] == 'Y') {
             $result .= '<tr>' .
-                '<td style="padding-top: 6px;"><input type="button" value="Добавить" onclick="addNewRow(\'table_' . $name . '\', \'' . $name . '\')"></td>' .
+                '<td style="padding-top: 6px;"><input type="button" value="' . Loc::getMessage('NX_TOOLS_UT_ADD_BUTTON') . '" onclick="addNewRow(\'table_' . $name . '\', \'' . $name . '\')"></td>' .
                 '</tr>';
         }
 
@@ -165,10 +166,11 @@ class CNXUserTypeHlblock extends \CUserTypeHlblock
                 var oRow=oTbl.insertRow(oTbl.rows.length-1);
                 var oCell=oRow.insertCell(-1);";
 
+        $langId = LANGUAGE_ID;
         $result .= <<<EOT
 oCell.innerHTML='<input name="$arUserField[FIELD_NAME]['+indexCount_$tag_name_x+']" value="" id="$arUserField[FIELD_NAME]['+indexCount_$tag_name_x+']" size="5" type="text">'+
 '<input type="button" value="..." '+
-'onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_user_search.php?FN=$form_name&lang=ru&FC=$arUserField[EDIT_FORM_LABEL]['+indexCount_$tag_name_x+']\', '+
+'onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_user_search.php?FN=$form_name&lang=$langId&FC=$arUserField[EDIT_FORM_LABEL]['+indexCount_$tag_name_x+']\', '+
 ' 900, 700);">'+'&nbsp;<span id="div_$arUserField[EDIT_FORM_LABEL]['+indexCount_$tag_name_x+']" ></span>';
 EOT;
 

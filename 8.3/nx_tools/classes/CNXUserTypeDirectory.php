@@ -33,7 +33,7 @@ class CNXUserTypeDirectory extends \CIBlockPropertyDirectory
         $result = parent::GetUserTypeDescription();
 
         $result['USER_TYPE'] = 'nx_directory';
-        $result['DESCRIPTION'] = 'NX - привязка к элементам highloadblock';
+        $result['DESCRIPTION'] = Loc::getMessage('NX_TOOLS_UT_DIRECTORY_DESCRIPTION');
         $result['GetPropertyFieldHtml'] = array(__CLASS__, 'GetPropertyFieldHtml');
         $result['GetSettingsHTML'] = array(__CLASS__, 'GetSettingsHTML');
         $result['GetUIFilterProperty'] = array(__CLASS__, 'GetUIFilterProperty');
@@ -100,7 +100,7 @@ class CNXUserTypeDirectory extends \CIBlockPropertyDirectory
             $HlBlockId = $row["ID"];
         }
 
-        $html .= '<input type="button" value="..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_highloadblock_rows_list_search.php?ENTITY_ID='.$HlBlockId.'&lang=ru&n=' . $strHTMLControlName["VALUE"] . '\', 900, 700);">' .
+        $html .= '<input type="button" value="..." onClick="jsUtils.OpenWindow(\'/bitrix/admin/nx_highloadblock_rows_list_search.php?ENTITY_ID='.$HlBlockId.'&lang='.LANGUAGE_ID.'&n=' . $strHTMLControlName["VALUE"] . '\', 900, 700);">' .
             '&nbsp;<span class="name_element" id="sp_' . md5($strHTMLControlName["VALUE"]) . '_" >' . $name . '</span>';
 
         return $html;

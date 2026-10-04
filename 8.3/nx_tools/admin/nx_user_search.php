@@ -207,7 +207,7 @@ while($arRes = $rsData->GetNext())
     $arActions = array();
     $arActions[] = array(
         "ICON"=>"",
-        "TEXT"=>'Выбрать',
+        "TEXT"=>\Bitrix\Main\Localization\Loc::getMessage('NX_TOOLS_ADMIN_SELECT'),
         "DEFAULT"=>true,
         "ACTION"=>"SetValue('".$f_ID."', '".$f_NAME."');"
     );

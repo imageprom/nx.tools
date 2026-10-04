@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	$('.nx-select-area .nx-select').chosen({
-			no_results_text: "Нет элемента",
+			no_results_text: BX.message('NX_IEST_NO_RESULTS'),
 		});
 
 	$('.nx-select-area .chosen-search input').on('input', function () {
@@ -32,7 +32,7 @@ $(document).ready(function () {
 				beforeSend: function(){$('#'+idSelect).empty(); }
 			}).done(function (data) {
 				if(data.length) {
-					$('#'+idSelect).append('<option value="">(все)</option>');
+					$('#'+idSelect).append('<option value="">' + BX.message('NX_IEST_ALL') + '</option>');
 					$.map( data, function( item ) {
 						$('#'+idSelect).append('<option value="' + item.ID + '">' + item.NAME + '</option>');
 					});
